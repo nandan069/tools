@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+    volumes:
+      - ./uploads:/tmp/meta-remover-uploads
+      - ./outputs:/tmp/meta-remover-outputs
+
+  redis:
+    image: redis:alpine
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "2"

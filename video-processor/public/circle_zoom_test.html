@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Circle Pop Zoom CSS Test</title>
+<style>
+body { margin: 0; background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; color: white; }
+.test-container {
+  position: relative;
+  width: 800px;
+  height: 450px;
+  background: #000;
+  overflow: hidden;
+}
+.base-layer {
+  width: 100%;
+  height: 100%;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,0.05) 20px, rgba(255,255,255,0.05) 21px),
+    repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.05) 20px, rgba(255,255,255,0.05) 21px),
+    linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.base-layer::after {
+  content: 'SHARP ORIGINAL VIDEO';
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px black;
+}
+.magnify-circle {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+}
+.magnify-circle .zoom-layer {
+  position: absolute;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 11px),
+    repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 11px),
+    linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
+}
+.magnify-circle .zoom-layer::after {
+  content: '2x ZOOM';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: yellow;
+  font-weight: bold;
+  font-size: 16px;
+  text-shadow: 1px 1px 2px black;
+}
+.info { margin-top: 20px; text-align: center; font-size: 14px; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div>
+  <div class="test-container" id="container">
+    <div class="base-layer"></div>
+  </div>
+  <div class="info">
+    Testing: overflow:hidden + border-radius:50% clipping WITHOUT CSS transform.<br>
+    Three circles at different positions, all at 2x zoom.
+  </div>
+</div>
+<script>
+const circles = [
+  { x: 35, y: 25, width: 20, height: 35.56 },
+  { x: 5,  y: 5,  width: 15, height: 26.67 },
+  { x: 70, y: 55, width: 18, height: 32 },
+];
+const zoom = 2;
+circles.forEach((crop, i) => {
+  const cx = crop.x + crop.width / 2;
+  const cy = crop.y + crop.height / 2;
+  const vidW = (10000 / crop.width) * zoom;
+  const vidH = (10000 / crop.height) * zoom;
+  const vidLeft = 50 - (cx / 100) * vidW;
+  const vidTop = 50 - (cy / 100) * vidH;
+  const container = document.getElementById('container');
+  const circle = document.createElement('div');
+  circle.className = 'magnify-circle';
+  circle.style.cssText = `top:${crop.y}%;left:${crop.x}%;width:${crop.width}%;height:${crop.height}%;`;
+  const zoomLayer = document.createElement('div');
+  zoomLayer.className = 'zoom-layer';
+  zoomLayer.style.cssText = `width:${vidW}%;height:${vidH}%;left:${vidLeft}%;top:${vidTop}%;`;
+  circle.appendChild(zoomLayer);
+  container.appendChild(circle);
+});
+</script>
+</body>
+</html>

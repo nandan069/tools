@@ -1,0 +1,7 @@
+node_modules
+.git
+.env
+disk_tmp
+logs
+uploads
+outputs

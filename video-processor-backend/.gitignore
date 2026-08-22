@@ -1,0 +1,10 @@
+node_modules
+.env
+__pycache__/
+*.pyc
+disk_tmp/
+test.js
+test_*.mp4
+*.json
+!package.json
+!package-lock.json
